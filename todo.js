@@ -1,57 +1,58 @@
 let todoApp = {
-    todoStates: [],
+    todos: [],
 
     start(){
         let inputElement = document.querySelector('input[name=todo]');
         inputElement.addEventListener('keypress', this.onCreateTodo.bind(this));
     },
 
-    updateStatusBar(){
-        let todoList = document.querySelectorAll('.list-group > li');
-        let allTodoCount = document.getElementById('all-todo-count');
+    add(title){
+        this.todos.push({
+            todo: title,
+            complete: false,
+            createDate: new Date(),
+            dueDate: null,
+            completeDate: null
+        });
+    },
 
-        allTodoCount.textContent = todoList.length;
+    updateView(){
+        let list = document.querySelector('.list-group');
+        let todoStatus = document.querySelector('.todo-status');
+        let listHTML = '';
+
+        for(let i=0; i < this.todos.length; i++){
+            listHTML += `
+                <li class="list-group-item list-group-flat">
+                    <div class="checkbox">
+                        <input type="checkbox" id="checkbox">
+                        <label for="checkbox">${this.todos[i].todo}</label>
+                        <button type="button" class="btn btn-outline-secondary btn-sm" data-id="${i}">X</button>
+                    </div>
+                </li>`;
+        }
+
+        list.innerHTML = listHTML;
+
+        todoStatus.innerHTML = `
+            할일:<span id="all-todo-count">${this.todos.length}건</span>
+            완료:<span id="complete-todo-count">${this.todos.filter(t => t.complete).length}건</span>
+            미완료:<span id="incomplete-todo-count">${this.todos.filter(t => !t.complete).length}건</span>`;
+
+        list.querySelectorAll('button').forEach(btn => btn.addEventListener('click', this.onDeleteTodo.bind(this)));
     },
 
     onCreateTodo(event){
         if(event.which === 13){
-            let list = document.querySelector('.list-group');
-            let todoContainer = document.createElement('li');
-            let todoItem = document.createElement('div');
-            let todoStatus = document.createElement('input');
-            let todoLabel = document.createElement('label');
-            let deleteButton = document.createElement('button');
-
-            todoContainer.classList.add('list-group-item', 'list-group-flat');
-
-            todoContainer.appendChild(todoItem);
-
-            todoItem.appendChild(todoStatus);
-            todoItem.appendChild(todoLabel);
-            todoItem.appendChild(deleteButton);
-            todoItem.classList.add('checkbox');
-
-            todoStatus.setAttribute('id', 'checkbox');
-            todoStatus.setAttribute('type', 'checkbox');
-
-            todoLabel.setAttribute('for', 'checkbox');
-            todoLabel.textContent = event.target.value;
-
-            deleteButton.classList.add('btn', 'btn-outline-secondary', 'btn-sm');
-            deleteButton.textContent = 'X';
-
-            list.appendChild(todoContainer);
-
-            deleteButton.addEventListener('click', this.onDeleteTodo.bind(this));
-
-            this.updateStatusBar();
+            this.add(event.target.value);
+            this.updateView();
         }
     },
 
     onDeleteTodo(event){
-        event.target.parentElement.parentElement.remove();
-
-        this.updateStatusBar();
+        let id = event.target.dataset.id;
+        this.todos.splice(id, 1);
+        this.updateView();
     }
 };
 
