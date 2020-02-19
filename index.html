@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" type="text/css" href="./todo.css">
+</head>
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <input type="text" name="todo" class="form-control" placeholder="할 일을 입력하세요">
+            </div>
+            <div class="col-12">
+                <ul class="list-group"></ul>
+            </div>
+        </div>
+        <div class="col-12">
+            할일:<span id="all-todo-count">0건</span>
+            완료:<span id="complete-todo-count">0건</span>
+            미완료:<span id="incomplete-todo-count">0건</span>
+        </div>
+    </div>
+    <script src="./todo.js"></script>
+</body>
+</html>
